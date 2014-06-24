@@ -13,21 +13,18 @@ message() {
 cd $BUILD_ROOT
 
 message "Setting environment variables"
-export GEM_HOME=$BUILD_ROOT/.gems
-export PATH=$BUILD_ROOT/.gems/bin:$PATH
+export GEM_HOME=$BUILD_ROOT/vendor/bundle
+export PATH=$BUILD_ROOT/vendor/bundle/bin:$PATH
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF8
 
 # Install Jekyll into BUILD_ROOT/.gems
 cat << EOF > ~/.gemrc
 gem: --no-ri --no-rdoc
-gemhome: $BUILD_ROOT/.gems
+gemhome: $BUILD_ROOT/vendor/bundle
 gempath:
-- $BUILD_ROOT/.gems
+- $BUILD_ROOT/vendor/bundle
 EOF
-
-message "Installing jekyll"
-gem install jekyll
 
 # Install dependencies if a Gemfile is present
 if [ -f Gemfile ]
@@ -41,7 +38,7 @@ fi
 if [ ! -f Procfile ]
 then
     message "no Procfile found, providing default"
-    echo "web: env GEM_HOME=./.gems ./.gems/bin/jekyll serve --port \$PORT" > Procfile
+    echo "web: env GEM_HOME=./vendor/bundle ./vendor/bundle/bin/jekyll serve --port \$PORT" > Procfile
 fi
 
 # Run Jekyll
